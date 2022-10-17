@@ -1,0 +1,36 @@
+version: "3.8"
+
+services:
+
+  mongodb_2:
+    image: mongo
+    ports:
+      - "27019:27017"
+    volumes:
+      - ~/apps/mongo:/data/dbs
+    env_file:
+      - .env
+    command: mongod --quiet --logpath /dev/null
+
+
+  redis_2:
+    image: redis
+    container_name: portfolio_redis
+    ports:
+      - "6385:6379"
+    volumes:
+      - ./storage/redis/data:/data
+    env_file:
+      - .env
+
+  web_2:
+    build: .
+    container_name: portfolio_bot
+    command: bash -c 'python main.py'
+    volumes:
+      - .:/code
+    network_mode: host
+    ports:
+      - "1442:1442"
+    env_file:
+      - .env
