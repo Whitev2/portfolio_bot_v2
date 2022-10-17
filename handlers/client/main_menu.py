@@ -43,7 +43,7 @@ async def select_language(message: Message, state: FSMContext):
     await message.answer(text, reply_markup=await keyboard(message, 'hello_world', adjust=2))
 
 
-@router.message((F.text.in_({"❔️О чат-ботах", " ❔️ About chatbots", "❔️ Chatbotlar haqida"})))
+@router.message((F.text.in_({"❔️О чат-ботах", "❔️ About chatbots", "❔️ Chatbotlar haqida"})))
 async def other_bot(message: types.Message, state: FSMContext):
     await state.set_state(About_menu.main)
     text = await distributor(message.from_user.id, 'other_bot')

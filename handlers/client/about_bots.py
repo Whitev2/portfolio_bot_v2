@@ -19,7 +19,6 @@ flags = {"throttling_key": "True"}
 
 @router.message(F.text.in_({'⬅️ Назад', '⬅️ back', '⬅️ orqaga'}))
 async def back(message: types.Message, state: FSMContext):
-    print(11)
     await commands_start(message, state)
 
 @router.message((F.text.in_({"❇️  Плюсы", "❇️ Pros"})))
