@@ -1,15 +1,8 @@
 import asyncio
-
-from aiogram import Router, F, Bot, types
+from aiogram import Router, F, types
 from aiogram.dispatcher.fsm.context import FSMContext
-from aiogram.types import Message
-from aiogram.utils.keyboard import ReplyKeyboardBuilder
-
-from database.db import mongo_easy_insert, mongo_easy_upsert
-from handlers.client.main_menu import select_language, commands_start
-from keyboards.main_menu_kb import main_kb
+from handlers.client.main_menu import commands_start
 from states.about_bots_state import About_menu
-from states.admin_state import Admin_menu
 from utils.language_distributor import distributor
 
 router = Router()
@@ -17,9 +10,11 @@ router.message.filter(state=About_menu)
 
 flags = {"throttling_key": "True"}
 
-@router.message(F.text.in_({'⬅️ Назад', '⬅️ back', '⬅️ orqaga'}))
+
+@router.message(F.text.in_({'⬅️ Назад', '⬅️ Back', '⬅️ Orqaga'}))
 async def back(message: types.Message, state: FSMContext):
     await commands_start(message, state)
+
 
 @router.message((F.text.in_({"❇️  Плюсы", "❇️ Pros"})))
 async def pross(message: types.Message):
@@ -36,7 +31,8 @@ async def what_can(message: types.Message):
     await message.answer(text)
 
 
-@router.message((F.text.in_({'⚜️ Преимущества чат-ботов', "⚜️ Benefits of Chatbots", "⚜️ Chatbotlarning afzalliklari"})))
+@router.message(
+    (F.text.in_({'⚜️ Преимущества чат-ботов', "⚜️ Benefits of Chatbots", "⚜️ Chatbotlarning afzalliklari"})))
 async def advantages(message: types.Message):
     text = await distributor(message.from_user.id, 'advantages')
     await message.answer(text)

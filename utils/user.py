@@ -8,8 +8,5 @@ class User:
         self.user_id = int(message.from_user.id)
 
     async def get_language(self):
-        print(111111)
-        print(self.user_id)
         user_info = await mongo_easy_find_one('database', 'user_info', {'_id': self.user_id})
-        print(user_info)
         return user_info.get('language')

@@ -1,13 +1,11 @@
-from aiogram import Router, F, Bot, types
+from aiogram import Router, F, types
 from aiogram.dispatcher.fsm.context import FSMContext
 from aiogram.types import Message
 from aiogram.utils.keyboard import ReplyKeyboardBuilder
 
-from database.db import mongo_easy_insert, mongo_easy_upsert
-from handlers.client.main_menu import select_language
-from keyboards.main_menu_kb import main_kb
+from database.db import mongo_easy_insert
+from handlers.client.main_menu import select_language, commands_start
 from states.admin_state import Admin_menu
-from utils.language_distributor import distributor
 
 router = Router()
 router.message.filter(state=Admin_menu)
@@ -15,13 +13,19 @@ router.message.filter(state=Admin_menu)
 flags = {"throttling_key": "True"}
 
 
-@router.message(((F.text == "Добавить текст")), flags=flags)
+@router.message(F.text.in_({'Возврат в меню'}), flags=flags)
+async def back(message: types.Message, state: FSMContext):
+    await commands_start(message, state)
+
+
+@router.message((F.text == "Добавить текст"), flags=flags)
 async def new_text(message: Message, state: FSMContext):
     await state.set_state(Admin_menu.confirm_text)
     text = 'Напишите текст в формате tag|language|text'
     nmarkup = ReplyKeyboardBuilder()
     nmarkup.row(types.KeyboardButton(text="Отменить"))
     await message.answer(text, reply_markup=nmarkup.as_markup(resize_keyboard=True))
+
 
 @router.message(state=Admin_menu.confirm_text, flags=flags)
 async def confirm_text(message: Message, state: FSMContext):
@@ -34,7 +38,8 @@ async def confirm_text(message: Message, state: FSMContext):
     await state.clear()
     await select_language(message, state)
 
-@router.message(((F.text == "Добавить клавиатуру")), flags=flags)
+
+@router.message((F.text == "Добавить клавиатуру"), flags=flags)
 async def new_keyboard(message: Message, state: FSMContext):
     await state.set_state(Admin_menu.confirm_keyboard)
     text = 'Напишите текст в формате tag|language|button_1, button_2..'
@@ -42,19 +47,23 @@ async def new_keyboard(message: Message, state: FSMContext):
     nmarkup.row(types.KeyboardButton(text="Отменить"))
     await message.answer(text, reply_markup=nmarkup.as_markup(resize_keyboard=True))
 
+
 @router.message(state=Admin_menu.confirm_keyboard, flags=flags)
 async def confirm_keyboard(message: Message, state: FSMContext):
     keyboard_info = message.html_text.split('|')
     buttons = keyboard_info[-1].split(',')
     await message.answer('Клавиатура добавлена')
-    await mongo_easy_insert('database', 'keyboard', {'tag': keyboard_info[0], 'language': keyboard_info[1], 'buttons': buttons})
+    await mongo_easy_insert('database', 'keyboard',
+                            {'tag': keyboard_info[0], 'language': keyboard_info[1], 'buttons': buttons})
     await state.clear()
     await select_language(message, state)
 
-@router.message(((F.text == "Статистика")), flags=flags)
+
+@router.message((F.text == "Статистика"), flags=flags)
 async def statistics(message: Message, state: FSMContext):
     pass
 
-@router.message(((F.text == "Рассылка")), flags=flags)
+
+@router.message((F.text == "Рассылка"), flags=flags)
 async def spam(message: Message, state: FSMContext):
     pass

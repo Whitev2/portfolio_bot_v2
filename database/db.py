@@ -12,6 +12,7 @@ async def mongo_easy_insert(database: str, collection: str, condition_dict: dict
     except Exception as ex:
         return False
 
+
 async def mongo_easy_upsert(database: str, collection: str, condition_dict: dict, main_dict: dict):
     """Use this function if you need to update or insert something and you not sure if it exists.\n\n
     Condition dict will be inserted too."""
