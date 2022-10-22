@@ -64,6 +64,17 @@ async def prices(message: types.Message, state: FSMContext):
     await message.answer(text, reply_markup=await keyboard(message, 'prices', adjust=2))
 
 
+@router.message((F.text.in_({"🥽 Bot examples", "🥽 Примеры ботов", "🥽 Bot misollar"})), flags=flags)
+async def bot_example(message: types.Message):
+    text = await distributor(message.from_user.id, 'bot_example')
+    await message.answer(text, disable_web_page_preview=True)
+
+
+@router.message((F.text.in_({"📢 Feedback", "📢 Обратная связь", "📢 Qayta aloqa"})), flags=flags)
+async def feedback(message: types.Message):
+    text = await distributor(message.from_user.id, 'feedback')
+    await message.answer(text, disable_web_page_preview=True)
+
 @router.message((F.text == "♻️ Админ"), flags=flags)
 async def admin_menu(message: Message, state: FSMContext):
     await state.set_state(Admin_menu.main)
