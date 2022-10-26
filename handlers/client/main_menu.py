@@ -43,6 +43,14 @@ async def select_language(message: Message, state: FSMContext):
     await message.answer(text, reply_markup=await keyboard(message, 'hello_world', adjust=2))
 
 
+@router.message((F.text.in_({"♻️ Change language", "♻️ Tilni o'zgartirish", "♻️  Сменить язык"})), flags=flags)
+async def other_bot(message: types.Message, state: FSMContext):
+    nmarkup = ReplyKeyboardBuilder()
+    nmarkup.row(types.KeyboardButton(text="🇷🇺 Русский 🇷🇺"))
+    nmarkup.row(types.KeyboardButton(text="🇺🇸 English 🇺🇸"))
+    nmarkup.row(types.KeyboardButton(text="🇺🇿 O'zbek 🇺🇿"))
+    await message.answer('Please select a language!', reply_markup=nmarkup.as_markup(resize_keyboard=True))
+
 @router.message((F.text.in_({"❔️О чат-ботах", "❔️ About chatbots", "❔️ Chatbotlar haqida"})), flags=flags)
 async def other_bot(message: types.Message, state: FSMContext):
     await state.set_state(About_menu.main)
