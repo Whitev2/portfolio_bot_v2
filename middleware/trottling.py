@@ -7,7 +7,7 @@ from cachetools import TTLCache
 
 from data import all_data
 
-THROTTLE_TIME = all_data().get_THROTTLE_TIME()
+THROTTLE_TIME = 0.2
 
 
 class ThrottlingMiddleware(BaseMiddleware):

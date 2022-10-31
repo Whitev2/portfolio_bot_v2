@@ -6,7 +6,7 @@ from aiogram import Bot
 from redis import from_url
 
 
-class all_data():
+class all_data:
     def __init__(self):
         self.redis_url = os.getenv('REDIS_URL')
         self.bot_token = os.getenv('BOT_TOKEN')

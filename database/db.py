@@ -2,7 +2,7 @@ from data import all_data
 
 
 async def mongo_easy_insert(database: str, collection: str, condition_dict: dict):
-    """Use this function if you need to update or insert something and you not sure if it exists.\n\n
+    """Use this function if you need to insert something and you not sure if it exists.\n\n
     Condition dict will be inserted too."""
     try:
         client = all_data().get_mongo()
@@ -14,7 +14,7 @@ async def mongo_easy_insert(database: str, collection: str, condition_dict: dict
 
 
 async def mongo_easy_upsert(database: str, collection: str, condition_dict: dict, main_dict: dict):
-    """Use this function if you need to update or insert something and you not sure if it exists.\n\n
+    """Use this function if you need to update something and you not sure if it exists.\n\n
     Condition dict will be inserted too."""
     try:
         client = all_data().get_mongo()
